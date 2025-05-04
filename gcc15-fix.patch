@@ -1,0 +1,11 @@
+diff -ura sentencepiece/src/sentencepiece_processor.h sentencepiece-new/src/sentencepiece_processor.h
+--- sentencepiece/src/sentencepiece_processor.h	2025-05-03 14:50:30.662508417 +0100
++++ sentencepiece-new/src/sentencepiece_processor.h	2025-05-03 14:51:28.199349571 +0100
+@@ -21,6 +21,7 @@
+ #include <string_view>
+ #include <utility>
+ #include <vector>
++#include <cstdint>
+ 
+ #ifndef SWIG
+ namespace absl {

@@ -3,7 +3,7 @@ _name=sentencepiece
 pkgbase="${_name}"
 pkgname=("${pkgbase}" "python-${pkgbase}")
 pkgver=0.2.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Unsupervised text tokenizer for Neural Network-based text generation"
 arch=('x86_64')
 url="https://github.com/google/sentencepiece"
@@ -17,12 +17,12 @@ source=(
   "${_name}::git+${url}.git#tag=${_tag}"
   "fix-crash-in-unigram-model-training.patch::${url}/commit/d19ac45c919602cb041a86599d0593d24a150ac2.patch"
   "bump-cmake-minimum-required-version.patch::${url}/commit/e2127b9b932ba00811d5023c5ea69a12a857b244.patch"
+  "gcc15-fix.patch"
 )
-sha512sums=(
-  'SKIP'
-  '644bc47fb3b90f2447ae9aac5ff2939fa6c9b3b0dc33550828b8517656f33fb1b41b2ebf9443e4b39a64bb963533c8d7a323b100d0b37671b070b7368f6fb1c7'
-  'a4749510e7a4e5c72c60e67e903201d5f6b2224752059481613cb6e0e01c901d0bdbd83553ecc0b916f551e6f37342bab6bf298dfcdd5234129b1645299775b9'
-)
+sha512sums=('e1d7db089fca522df209a6e365cf33415fca748c4cfb7a4dc68e88924b368a8cde794acd4a6545663b4dbb19b768951a4fa4d2d4825486f19f8f3396c4d50304'
+            '644bc47fb3b90f2447ae9aac5ff2939fa6c9b3b0dc33550828b8517656f33fb1b41b2ebf9443e4b39a64bb963533c8d7a323b100d0b37671b070b7368f6fb1c7'
+            'a4749510e7a4e5c72c60e67e903201d5f6b2224752059481613cb6e0e01c901d0bdbd83553ecc0b916f551e6f37342bab6bf298dfcdd5234129b1645299775b9'
+            'c0f9587fc2def9a3df1f786b82649b06e991b93cf0713ea6df371b25bfc6a9474efafc18bdfb6a556fec0193056e36e6517984ce217067c1c860c4266e0f3fb1')
 
 pkgver() {
   git -C "${_name}" describe --tags | sed 's/^v//'
@@ -39,6 +39,9 @@ prepare() {
 
   # Fix build for CMake 4.0.0+
   git apply --verbose ../bump-cmake-minimum-required-version.patch
+
+  # Fix GCC15 incompatibilities
+  patch -Np1 -i ../gcc15-fix.patch
 
   # Use shared libs for python module
   sed -i 's/libsentencepiece.a/libsentencepiece.so/g' python/setup.py
